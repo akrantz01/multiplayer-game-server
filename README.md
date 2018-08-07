@@ -11,3 +11,6 @@ pip3 install -r requirements.txt
 pyinstaller --onefile server.py --hidden-import=dns --hidden-import=dns.dnssec --hidden-import=dns.e164 --hidden-import=dns.namedict --hidden-import=dns.tsigkeyring --hidden-import=dns.update --hidden-import=dns.version --hidden-import=dns.zone --hidden-import=engineio.async_eventlet
 ```
 Find the executable file in the `/dist` folder. PyInstaller should generate the proper executable based on your system's OS. 
+
+## Simple Example
+You can find an example in the [/example](/example) directory.
