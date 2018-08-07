@@ -1,0 +1,265 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>CSS &#8212; MMOS v0.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="HTML" href="html.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="css">
+<h1>CSS<a class="headerlink" href="#css" title="Permalink to this headline">¶</a></h1>
+<p>The CSS behind the example</p>
+<div class="section" id="main-css">
+<h2>main.css<a class="headerlink" href="#main-css" title="Permalink to this headline">¶</a></h2>
+<p>General styling</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">body</span> <span class="p">{</span>
+    <span class="k">padding</span><span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">margin</span><span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">canvas</span> <span class="p">{</span>
+    <span class="k">position</span><span class="p">:</span> <span class="kc">fixed</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">@</span><span class="k">-webkit-keyframes</span> <span class="nt">animatetop</span> <span class="p">{</span>
+    <span class="nt">from</span> <span class="p">{</span>
+        <span class="k">top</span><span class="p">:</span> <span class="mi">-300</span><span class="kt">px</span><span class="p">;</span>
+        <span class="k">opacity</span><span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nt">to</span> <span class="p">{</span>
+        <span class="k">top</span><span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">opacity</span><span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="p">@</span><span class="k">-moz-keyframes</span> <span class="nt">animatetop</span> <span class="p">{</span>
+    <span class="nt">from</span> <span class="p">{</span>
+        <span class="k">top</span><span class="p">:</span> <span class="mi">-300</span><span class="kt">px</span><span class="p">;</span>
+        <span class="k">opacity</span><span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nt">to</span> <span class="p">{</span>
+        <span class="k">top</span><span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">opacity</span><span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="p">@</span><span class="k">-o-keyframes</span> <span class="nt">animatetop</span> <span class="p">{</span>
+    <span class="nt">from</span> <span class="p">{</span>
+        <span class="k">top</span><span class="p">:</span> <span class="mi">-300</span><span class="kt">px</span><span class="p">;</span>
+        <span class="k">opacity</span><span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nt">to</span> <span class="p">{</span>
+        <span class="k">top</span><span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">opacity</span><span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="p">@</span><span class="k">keyframes</span> <span class="nt">animatetop</span> <span class="p">{</span>
+    <span class="nt">from</span> <span class="p">{</span>
+        <span class="k">top</span><span class="p">:</span> <span class="mi">-300</span><span class="kt">px</span><span class="p">;</span>
+        <span class="k">opacity</span><span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nt">to</span> <span class="p">{</span>
+        <span class="k">top</span><span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">opacity</span><span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="p">#</span><span class="nn">modal</span> <span class="p">{</span>
+    <span class="k">display</span><span class="p">:</span> <span class="kc">none</span><span class="p">;</span>
+    <span class="k">position</span><span class="p">:</span> <span class="kc">fixed</span><span class="p">;</span>
+    <span class="k">z-index</span><span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">padding-top</span><span class="p">:</span> <span class="mi">100</span><span class="kt">px</span><span class="p">;</span>
+    <span class="k">left</span><span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">top</span><span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">width</span><span class="p">:</span> <span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+    <span class="k">height</span><span class="p">:</span> <span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+    <span class="k">overflow</span><span class="p">:</span> <span class="kc">auto</span><span class="p">;</span>
+    <span class="k">background-color</span><span class="p">:</span> <span class="nb">rgb</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="k">background-color</span><span class="p">:</span> <span class="nb">rgba</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="p">#</span><span class="nn">modal-content</span> <span class="p">{</span>
+    <span class="k">position</span><span class="p">:</span> <span class="kc">relative</span><span class="p">;</span>
+    <span class="k">background-color</span><span class="p">:</span> <span class="mh">#fefefe</span><span class="p">;</span>
+    <span class="k">margin</span><span class="p">:</span> <span class="kc">auto</span><span class="p">;</span>
+    <span class="k">padding</span><span class="p">:</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">border</span><span class="p">:</span> <span class="mi">1</span><span class="kt">px</span> <span class="kc">solid</span> <span class="mh">#888</span><span class="p">;</span>
+    <span class="k">width</span><span class="p">:</span> <span class="mi">80</span><span class="kt">%</span><span class="p">;</span>
+    <span class="kp">-webkit-</span><span class="k">box-shadow</span><span class="p">:</span> <span class="mi">0</span> <span class="mi">4</span><span class="kt">px</span> <span class="mi">8</span><span class="kt">px</span> <span class="mi">0</span> <span class="nb">rgba</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">),</span><span class="mi">0</span> <span class="mi">6</span><span class="kt">px</span> <span class="mi">20</span><span class="kt">px</span> <span class="mi">0</span> <span class="nb">rgba</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.19</span><span class="p">);</span>
+    <span class="kp">-moz-</span><span class="k">box-shadow</span><span class="p">:</span> <span class="mi">0</span> <span class="mi">4</span><span class="kt">px</span> <span class="mi">8</span><span class="kt">px</span> <span class="mi">0</span> <span class="nb">rgba</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">),</span><span class="mi">0</span> <span class="mi">6</span><span class="kt">px</span> <span class="mi">20</span><span class="kt">px</span> <span class="mi">0</span> <span class="nb">rgba</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.19</span><span class="p">);</span>
+    <span class="k">box-shadow</span><span class="p">:</span> <span class="mi">0</span> <span class="mi">4</span><span class="kt">px</span> <span class="mi">8</span><span class="kt">px</span> <span class="mi">0</span> <span class="nb">rgba</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">),</span><span class="mi">0</span> <span class="mi">6</span><span class="kt">px</span> <span class="mi">20</span><span class="kt">px</span> <span class="mi">0</span> <span class="nb">rgba</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.19</span><span class="p">);</span>
+    <span class="kp">-webkit-</span><span class="k">animation-name</span><span class="p">:</span> <span class="n">animatetop</span><span class="p">;</span>
+    <span class="kp">-moz-</span><span class="k">animation-name</span><span class="p">:</span> <span class="n">animatetop</span><span class="p">;</span>
+    <span class="kp">-o-</span><span class="k">animation-name</span><span class="p">:</span> <span class="n">animatetop</span><span class="p">;</span>
+    <span class="k">animation-name</span><span class="p">:</span> <span class="n">animatetop</span><span class="p">;</span>
+    <span class="kp">-webkit-</span><span class="k">animation-duration</span><span class="p">:</span> <span class="mf">0.4</span><span class="kt">s</span><span class="p">;</span>
+    <span class="kp">-moz-</span><span class="k">animation-duration</span><span class="p">:</span> <span class="mf">0.4</span><span class="kt">s</span><span class="p">;</span>
+    <span class="kp">-o-</span><span class="k">animation-duration</span><span class="p">:</span> <span class="mf">0.4</span><span class="kt">s</span><span class="p">;</span>
+    <span class="k">animation-duration</span><span class="p">:</span> <span class="mf">0.4</span><span class="kt">s</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">#</span><span class="nn">modal-head</span> <span class="p">{</span>
+    <span class="k">padding</span><span class="p">:</span> <span class="mi">2</span><span class="kt">px</span> <span class="mi">16</span><span class="kt">px</span><span class="p">;</span>
+    <span class="k">background-color</span><span class="p">:</span> <span class="mh">#5cb85c</span><span class="p">;</span>
+    <span class="k">color</span><span class="p">:</span> <span class="kc">white</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">#</span><span class="nn">modal-content</span> <span class="p">{</span>
+    <span class="k">padding</span><span class="p">:</span> <span class="mi">2</span><span class="kt">px</span> <span class="mi">16</span><span class="kt">px</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">#</span><span class="nn">observer</span> <span class="p">{</span>
+    <span class="k">background-color</span><span class="p">:</span> <span class="kc">white</span><span class="p">;</span>
+    <span class="k">border</span><span class="p">:</span> <span class="mi">2</span><span class="kt">px</span> <span class="kc">solid</span> <span class="mh">#0a17a8</span><span class="p">;</span>
+    <span class="kp">-webkit-</span><span class="k">border-radius</span><span class="p">:</span> <span class="mi">10</span><span class="kt">px</span><span class="p">;</span>
+    <span class="kp">-moz-</span><span class="k">border-radius</span><span class="p">:</span> <span class="mi">10</span><span class="kt">px</span><span class="p">;</span>
+    <span class="k">border-radius</span><span class="p">:</span> <span class="mi">10</span><span class="kt">px</span><span class="p">;</span>
+    <span class="k">color</span><span class="p">:</span> <span class="kc">black</span><span class="p">;</span>
+    <span class="k">padding</span><span class="p">:</span> <span class="mi">16</span><span class="kt">px</span> <span class="mi">32</span><span class="kt">px</span><span class="p">;</span>
+    <span class="k">text-align</span><span class="p">:</span> <span class="kc">center</span><span class="p">;</span>
+    <span class="k">text-decoration</span><span class="p">:</span> <span class="kc">none</span><span class="p">;</span>
+    <span class="k">display</span><span class="p">:</span> <span class="kc">inline-block</span><span class="p">;</span>
+    <span class="k">font-size</span><span class="p">:</span> <span class="mi">16</span><span class="kt">px</span><span class="p">;</span>
+    <span class="k">margin</span><span class="p">:</span> <span class="mi">4</span><span class="kt">px</span> <span class="mi">2</span><span class="kt">px</span><span class="p">;</span>
+    <span class="kp">-webkit-</span><span class="k">transition-duration</span><span class="p">:</span> <span class="mf">0.4</span><span class="kt">s</span><span class="p">;</span>
+    <span class="kp">-moz-</span><span class="k">transition-duration</span><span class="p">:</span> <span class="mf">0.4</span><span class="kt">s</span><span class="p">;</span>
+    <span class="kp">-o-</span><span class="k">transition-duration</span><span class="p">:</span> <span class="mf">0.4</span><span class="kt">s</span><span class="p">;</span>
+    <span class="k">transition-duration</span><span class="p">:</span> <span class="mf">0.4</span><span class="kt">s</span><span class="p">;</span>
+    <span class="k">cursor</span><span class="p">:</span> <span class="kc">pointer</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">#</span><span class="nn">observer</span><span class="p">:</span><span class="nd">hover</span> <span class="p">{</span>
+    <span class="k">background-color</span><span class="p">:</span> <span class="mh">#0a17a8</span><span class="p">;</span>
+    <span class="k">color</span><span class="p">:</span> <span class="kc">white</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">#</span><span class="nn">player</span> <span class="p">{</span>
+    <span class="k">background-color</span><span class="p">:</span> <span class="kc">white</span><span class="p">;</span>
+    <span class="k">border</span><span class="p">:</span> <span class="mi">2</span><span class="kt">px</span> <span class="kc">solid</span> <span class="mh">#a80a12</span><span class="p">;</span>
+    <span class="kp">-webkit-</span><span class="k">border-radius</span><span class="p">:</span> <span class="mi">10</span><span class="kt">px</span><span class="p">;</span>
+    <span class="kp">-moz-</span><span class="k">border-radius</span><span class="p">:</span> <span class="mi">10</span><span class="kt">px</span><span class="p">;</span>
+    <span class="k">border-radius</span><span class="p">:</span> <span class="mi">10</span><span class="kt">px</span><span class="p">;</span>
+    <span class="k">color</span><span class="p">:</span> <span class="kc">black</span><span class="p">;</span>
+    <span class="k">padding</span><span class="p">:</span> <span class="mi">16</span><span class="kt">px</span> <span class="mi">32</span><span class="kt">px</span><span class="p">;</span>
+    <span class="k">text-align</span><span class="p">:</span> <span class="kc">center</span><span class="p">;</span>
+    <span class="k">text-decoration</span><span class="p">:</span> <span class="kc">none</span><span class="p">;</span>
+    <span class="k">display</span><span class="p">:</span> <span class="kc">inline-block</span><span class="p">;</span>
+    <span class="k">font-size</span><span class="p">:</span> <span class="mi">16</span><span class="kt">px</span><span class="p">;</span>
+    <span class="k">margin</span><span class="p">:</span> <span class="mi">4</span><span class="kt">px</span> <span class="mi">2</span><span class="kt">px</span><span class="p">;</span>
+    <span class="kp">-webkit-</span><span class="k">transition-duration</span><span class="p">:</span> <span class="mf">0.4</span><span class="kt">s</span><span class="p">;</span>
+    <span class="kp">-moz-</span><span class="k">transition-duration</span><span class="p">:</span> <span class="mf">0.4</span><span class="kt">s</span><span class="p">;</span>
+    <span class="kp">-o-</span><span class="k">transition-duration</span><span class="p">:</span> <span class="mf">0.4</span><span class="kt">s</span><span class="p">;</span>
+    <span class="k">transition-duration</span><span class="p">:</span> <span class="mf">0.4</span><span class="kt">s</span><span class="p">;</span>
+    <span class="k">cursor</span><span class="p">:</span> <span class="kc">pointer</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">#</span><span class="nn">player</span><span class="p">:</span><span class="nd">hover</span> <span class="p">{</span>
+    <span class="k">background-color</span><span class="p">:</span> <span class="mh">#a80a12</span><span class="p">;</span>
+    <span class="k">color</span><span class="p">:</span> <span class="kc">white</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">MMOS</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../home.html">Welcome to MMOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server.html">Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../client.html">Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Simple Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="py.html">Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="js.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="html.html">HTML</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CSS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#main-css">main.css</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="html.html" title="previous chapter">HTML</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Alex Krantz.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="../_sources/example/css.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
