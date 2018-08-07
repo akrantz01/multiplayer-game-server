@@ -14,3 +14,8 @@ Find the executable file in the `/dist` folder. PyInstaller should generate the 
 
 ## Simple Example
 You can find an example in the [/example](/example) directory.
+
+## Links
+* [Documentation](https://akrantz01.github.io/mmos/)
+* [My GitHub](https://github.com/akrantz01)
+* [My Website](https://www.alexkrantz.com)
