@@ -6,3 +6,4 @@ dist/
 *.spec
 releases/
 docs/_build
+notes.txt

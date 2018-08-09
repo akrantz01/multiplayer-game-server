@@ -1,21 +1,37 @@
 from argparse import ArgumentParser
+from configparser import ConfigParser, NoSectionError
 from eventlet import monkey_patch
 from flask import Flask, render_template, session
 from flask_socketio import SocketIO
 from os import urandom
-
-parser = ArgumentParser()
-parser.add_argument("--host", help="host to run the server on", default="127.0.0.1")
-parser.add_argument("--port", help="port to run the server on", default=5000)
-parser.add_argument("--debug", help="run the server in debug mode", action="store_true")
-parser.add_argument("--template", help="template file to load from", default="index.html")
-args = parser.parse_args()
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = urandom(16)
 monkey_patch()
 socketio = SocketIO(app)
 data = {}
+
+parser = ArgumentParser()
+parser.add_argument("--config", help="config file to load from. NOTE: the config file takes prescience over arguments")
+parser.add_argument("--host", help="host to run the server on", default="127.0.0.1")
+parser.add_argument("--port", help="port to run the server on", default=5000)
+parser.add_argument("--debug", help="run the server in debug mode", action="store_true")
+args = parser.parse_args()
+
+if args.config:
+    config = ConfigParser()
+    config.read(args.config)
+
+    if "server" not in config.sections():
+        raise NoSectionError("Unable to find section 'server'")
+    host = config["server"].get("host")
+    port = config["server"].getint("port")
+    debug = config["server"].getboolean("debug")
+
+else:
+    host = args.host
+    port = args.port
+    debug = args.debug
 
 
 @app.route('/')
@@ -43,4 +59,5 @@ def on_disconnect():
 
 
 if __name__ == '__main__':
-    socketio.run(app, host=args.host, port=args.port, debug=args.debug)
+    # socketio.run(app, host=args.host, port=args.port, debug=args.debug)
+    pass
