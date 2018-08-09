@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from configparser import ConfigParser, NoSectionError
+from configparser import ConfigParser, NoSectionError, NoOptionError
 from eventlet import monkey_patch
 from flask import Flask, render_template, session
 from flask_socketio import SocketIO
@@ -27,6 +27,26 @@ if args.config:
     host = config["server"].get("host")
     port = config["server"].getint("port")
     debug = config["server"].getboolean("debug")
+
+    globals = [s for s in config.sections() if s != "server"]
+    if not globals:
+        data["globals"] = None
+    else:
+        data["globals"] = {}
+
+    for s in globals:
+        keys = [k for k in config[s].keys() if "-" not in k]
+        if s != "unorganized":
+            data["globals"][s] = {}
+        for key in keys:
+            try:
+                t = eval(config[s][key + "-type"])
+                if s != "unorganized":
+                    data["globals"][s][key] = t(config[s][key])
+                else:
+                    data["globals"][key] = t(config[s][key])
+            except KeyError:
+                raise NoOptionError(key+"-type", "Argument type required for '{0}' in section '{1}'".format(key, s))
 
 else:
     host = args.host
