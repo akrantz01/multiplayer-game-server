@@ -6,6 +6,7 @@ var MMOC = (function() {
     let _y = 0;
     let _other = {};
     let _data = {};
+    let _connected = false;
 
     class MMOC {
         constructor(add_depends = false) {
@@ -25,6 +26,7 @@ var MMOC = (function() {
                 for (let i = 0; i < id_len; i++) {
                     _id += possible.charAt(Math.floor(Math.random() * 16));
                 }
+                _connected = true;
             });
         }
 
@@ -52,6 +54,16 @@ var MMOC = (function() {
 
         setOther(key = reqd("key"), value = reqd("value")) {
             _other[key] = value;
+        }
+
+        isconnected() {
+            return new Promise(function(resolve, reject) {
+                if (_connected) {
+                    resolve();
+                } else {
+                    reject();
+                }
+            });
         }
     }
 
