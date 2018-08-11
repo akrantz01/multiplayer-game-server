@@ -24,7 +24,7 @@ var MMOC = (function() {
                 let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
                 for (let i = 0; i < id_len; i++) {
-                    _id += possible.charAt(Math.floor(Math.random() * 16));
+                    _id += possible.charAt(Math.floor(Math.random() * possible.length));
                 }
                 _connected = true;
             });
