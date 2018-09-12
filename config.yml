@@ -1,0 +1,14 @@
+server:
+  host: "127.0.0.1"
+  port: "5000"
+  debug-username: "debug"
+  debug-password: "debug"
+
+globals:
+  s:
+    value:
+      value: "abc"
+      type: "string"
+    value2:
+      value: "abc2"
+      type: "string"
