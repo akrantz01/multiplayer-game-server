@@ -1,5 +1,5 @@
 let player, positions;
-let multiplayer = new MMOC(true);
+let multiplayer = new MMOC();
 multiplayer.setOther("color", "#ffffff");
 
 function update(jscolor) {
@@ -44,10 +44,9 @@ function draw() {
         }
     }
 
-    multiplayer.getDataFromServer();
     let data = multiplayer.getData();
-    for (let key in data) {
-        fill(data[key]["other"]["color"]);
-        ellipse(data[key]["x"], data[key]["y"], 20);
+    for (let key in data["Users"]) {
+        fill(data["Users"][key]["Other"]["color"]);
+        ellipse(data["Users"][key]["X"], data["Users"][key]["Y"], 20);
     }
 }

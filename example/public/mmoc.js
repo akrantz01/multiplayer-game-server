@@ -1,4 +1,4 @@
-var MMOC = (function() {
+let MMOC = (function() {
     const reqd = (name) => { throw new Error("Expected argument '" + name + "'") };
 
     let _id = "";
@@ -6,54 +6,72 @@ var MMOC = (function() {
     let _y = 0;
     let _other = {};
     let _data = {};
+    let _connected = false;
 
     class MMOC {
-        constructor(add_depends = false) {
-            if (add_depends) {
-                let script = document.createElement("script");
-                script.src = "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js";
-                document.head.appendChild(script);
-            }
-        }
+        init(id_len=8, wsurl="//" + document.domain + ":" + location.port + "/ws") {
+            if (location.protocol === "https") wsurl = "wss:" + wsurl;
+            else wsurl = "ws:" + wsurl;
+            this.ws = new WebSocket(wsurl);
 
-        init(id_len = 8, wsurl = "//" + document.domain + ":" + location.port) {
-            this.socket = io.connect(wsurl);
-
-            this.socket.on("connect", function() {
+            this.ws.onopen = function (event) {
                 let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
                 for (let i = 0; i < id_len; i++) {
-                    _id += possible.charAt(Math.floor(Math.random() * 16));
+                    _id += possible.charAt(Math.floor(Math.random() * possible.length));
                 }
-            });
+                _connected = true;
+            };
+
+            this.ws.onmessage = function (event) {
+                _data = JSON.parse(event.data);
+            };
+
+            setInterval(() => {
+                this.ws.send(JSON.stringify({
+                    type: 2
+                }));
+            }, 15);
         }
 
         sendData() {
-            this.socket.emit("data", {id: _id, x: _x, y: _y, other: _other});
-        }
-
-        getDataFromServer() {
-            this.socket.emit("get", function (data) {
-                _data = data;
-            });
+            this.ws.send(JSON.stringify({
+                type: 1,
+                id: _id,
+                other: _other,
+                coordinates: {
+                    x: _x,
+                    y: _y
+                }
+            }));
         }
 
         getData() {
             return _data;
         }
 
-        changeX(by = reqd("by")) {
+        changeX(by=reqd("by")) {
             _x += by;
         }
 
-        changeY(by = reqd("by")) {
+        changeY(by=reqd("by")) {
             _y += by;
         }
 
-        setOther(key = reqd("key"), value = reqd("value")) {
+        setOther(key=reqd("key"), value=reqd("value")) {
             _other[key] = value;
+        }
+
+        isconnected() {
+            return new Promise(function(resolve, reject) {
+                if (_connected) {
+                    resolve();
+                } else {
+                    reject();
+                }
+            });
         }
     }
 
     return MMOC;
-}());
+})();
