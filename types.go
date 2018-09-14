@@ -1,5 +1,7 @@
 package main
 
+import "sync"
+
 type (
 	// Server info
 	Server struct {
@@ -11,6 +13,7 @@ type (
 
 	// Game data
 	GameData struct {
+		sync.Mutex
 		Globals		map[string]map[string]Value
 		Users		map[string]UserValue
 	}

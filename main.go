@@ -7,11 +7,13 @@ import (
 	"github.com/labstack/echo/middleware"
 	"net/http"
 	"strings"
+	"sync"
 )
 
 var (
 	server Server
 	data GameData
+	dataMutex = sync.RWMutex{}
 	upgrader = websocket.Upgrader{
 		ReadBufferSize: 1024,
 		WriteBufferSize: 1024,
@@ -31,8 +33,11 @@ func main() {
 
 	// Parse config file
 	server, globals = ParseConfig(*file)
+
+	dataMutex.Lock()
 	data.Globals = globals
 	data.Users = make(map[string]UserValue)
+	dataMutex.Unlock()
 
 	// Setup server
 	e := echo.New()
@@ -93,18 +98,22 @@ func wsHandler(ctx echo.Context) error {
 		case 1:
 			userID = msg.ID
 
+			dataMutex.Lock()
 			data.Users[msg.ID] = UserValue{
 				X: msg.Coordinates.X,
 				Y: msg.Coordinates.Y,
 				Other: msg.Other,
 			}
+			dataMutex.Unlock()
 
 			//fmt.Printf("%+v\n", data.Users)
 
 			break
 
 		case 2:
+			dataMutex.RLock()
 			err = ws.WriteJSON(&data)
+			dataMutex.RUnlock()
 			break
 		}
 
@@ -122,21 +131,39 @@ func wsHandler(ctx echo.Context) error {
 }
 
 func debugAllHandler(ctx echo.Context) error {
-	return ctx.JSON(http.StatusOK, &data)
+	dataMutex.RLock()
+	d := &data
+	dataMutex.RUnlock()
+
+	return ctx.JSON(http.StatusOK, d)
 }
 
 func debugGlobalHander(ctx echo.Context) error {
 	key := ctx.Param("key")
+
+	var g interface{}
+	dataMutex.RLock()
 	if data.Globals[key] == nil || key == "" {
-		return ctx.JSON(http.StatusOK, &data.Globals)
+		g = &data.Globals
+	} else {
+		g = data.Globals[key]
 	}
-	return ctx.JSON(http.StatusOK, data.Globals[key])
+	dataMutex.RUnlock()
+
+	return ctx.JSON(http.StatusOK, g)
 }
 
 func debugUserHandler(ctx echo.Context) error {
 	id := ctx.Param("id")
-	if data.Users["banana"].equals(UserValue{}) || id == "" {
-		return ctx.JSON(http.StatusOK, &data.Users)
+
+	var u interface{}
+	dataMutex.RLock()
+	if data.Users[id].equals(UserValue{}) || id == "" {
+		u = &data.Users
+	} else {
+		u = data.Users[id]
 	}
-	return ctx.JSON(http.StatusOK, data.Users[id])
+	dataMutex.RUnlock()
+
+	return ctx.JSON(http.StatusOK, u)
 }
