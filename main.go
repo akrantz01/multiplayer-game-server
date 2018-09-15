@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"net/http"
+	"net/url"
 	"strings"
 	"sync"
 )
@@ -44,8 +45,20 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
+	if server.Upstream.InUse {
+		for _, loc := range server.Upstream.Locations {
+			u, _ := url.Parse(loc.URL)
+			targets := []*middleware.ProxyTarget{{URL: u,},}
+
+			g := e.Group(loc.Endpoint)
+			g.Use(middleware.Proxy(middleware.NewRandomBalancer(targets)))
+		}
+	}
+	if !server.Upstream.OverrideRoot || !server.Upstream.InUse {
+		e.Static("/", "./public")
+	}
+
 	// Define all routes
-	e.Static("/", "./public")
 	e.GET("/ws", wsHandler)
 
 	// Debug routes
@@ -57,10 +70,8 @@ func main() {
 		return false, nil
 	}))
 	debug.GET("/all", debugAllHandler)
-	debug.GET("/globals", debugGlobalHander)
 	debug.GET("/globals/", debugGlobalHander)
 	debug.GET("/globals/:key", debugGlobalHander)
-	debug.GET("/users", debugUserHandler)
 	debug.GET("/users/", debugUserHandler)
 	debug.GET("/users/:id", debugUserHandler)
 

@@ -3,6 +3,12 @@ server:
   port: "5000"
   debug-username: "debug"
   debug-password: "debug"
+  upstream:
+    active: yes
+    override-root: yes
+    locations:
+      - url: "http://localhost:8080"
+        endpoint: "/"
 
 globals:
   s:
