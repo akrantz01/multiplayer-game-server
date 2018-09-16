@@ -12,6 +12,7 @@ Welcome to the MMOS Documentation
    home
    server
    client
+   config
    license
    download
 
@@ -22,7 +23,7 @@ Example Code
     :maxdepth: 2
 
     example/index
-    example/py
     example/js
     example/html
     example/css
+    example/yml

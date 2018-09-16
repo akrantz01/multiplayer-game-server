@@ -1,0 +1,175 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Configuration &#8212; MMOS v0.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="License" href="license.html" />
+    <link rel="prev" title="Client" href="client.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="configuration">
+<h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
+<p>For configuring the server with its different parameters</p>
+<div class="section" id="descriptions">
+<h2>Descriptions<a class="headerlink" href="#descriptions" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">server</span><span class="p p-Indicator">:</span>                                 <span class="c1"># server config</span>
+
+  <span class="l l-Scalar l-Scalar-Plain">host</span><span class="p p-Indicator">:</span> <span class="s">&quot;127.0.0.1&quot;</span>                     <span class="c1"># host</span>
+  <span class="l l-Scalar l-Scalar-Plain">port</span><span class="p p-Indicator">:</span> <span class="s">&quot;5000&quot;</span>                          <span class="c1"># port</span>
+
+  <span class="l l-Scalar l-Scalar-Plain">debug-username</span><span class="p p-Indicator">:</span> <span class="s">&quot;debug&quot;</span>               <span class="c1"># /debug username</span>
+  <span class="l l-Scalar l-Scalar-Plain">debug-password</span><span class="p p-Indicator">:</span> <span class="s">&quot;debug&quot;</span>               <span class="c1"># /debug password</span>
+
+  <span class="l l-Scalar l-Scalar-Plain">upstream</span><span class="p p-Indicator">:</span>                             <span class="c1"># proxy settings</span>
+    <span class="l l-Scalar l-Scalar-Plain">active</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">yes</span>                         <span class="c1"># enable or disable</span>
+    <span class="l l-Scalar l-Scalar-Plain">override-root</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">yes</span>                  <span class="c1"># override / endpoint</span>
+    <span class="l l-Scalar l-Scalar-Plain">locations</span><span class="p p-Indicator">:</span>                          <span class="c1"># proxy from host to endpoint</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">url</span><span class="p p-Indicator">:</span> <span class="s">&quot;http://localhost:8080&quot;</span>    <span class="c1"># service url</span>
+        <span class="l l-Scalar l-Scalar-Plain">endpoint</span><span class="p p-Indicator">:</span> <span class="s">&quot;/&quot;</span>                   <span class="c1"># endpoint location</span>
+
+<span class="l l-Scalar l-Scalar-Plain">globals</span><span class="p p-Indicator">:</span>                                <span class="c1"># define global variables</span>
+
+  <span class="l l-Scalar l-Scalar-Plain">s</span><span class="p p-Indicator">:</span>                                    <span class="c1"># section name</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">value</span><span class="p p-Indicator">:</span>                              <span class="c1"># value name</span>
+      <span class="l l-Scalar l-Scalar-Plain">value</span><span class="p p-Indicator">:</span> <span class="s">&quot;abc&quot;</span>                      <span class="c1"># actual value</span>
+      <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="s">&quot;string&quot;</span>                    <span class="c1"># value type</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">value2</span><span class="p p-Indicator">:</span>                             <span class="c1"># value name</span>
+      <span class="l l-Scalar l-Scalar-Plain">value</span><span class="p p-Indicator">:</span> <span class="s">&quot;abc2&quot;</span>                     <span class="c1"># actual value</span>
+      <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="s">&quot;string&quot;</span>                    <span class="c1"># value type</span>
+</pre></div>
+</div>
+<p>To view a config file that is being used, see config.yml in <a class="reference internal" href="example/yml.html"><span class="doc">the example</span></a>.</p>
+</div>
+<div class="section" id="special-cases">
+<h2>Special Cases<a class="headerlink" href="#special-cases" title="Permalink to this headline">¶</a></h2>
+<p>These are some cases where typical keys only being used once do not apply.</p>
+<div class="section" id="server-upstream-locations">
+<h3>Server -&gt; Upstream -&gt; Locations:<a class="headerlink" href="#server-upstream-locations" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Acts as an array of urls to proxy</li>
+<li>Requires both <code class="code yaml docutils literal notranslate"><span class="literal scalar plain"><span class="pre">url</span></span></code> and <code class="code yaml docutils literal notranslate"><span class="literal scalar plain"><span class="pre">endpoint</span></span></code> to work</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="globals">
+<h3>Globals:<a class="headerlink" href="#globals" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>Acts as an array of values</li>
+<li>Can have n amount of values</li>
+<li>Each value must be named</li>
+<li>Each value must have a section</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">MMOS</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="home.html">Welcome to MMOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Client</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#descriptions">Descriptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#special-cases">Special Cases</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="download.html">Download</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example/index.html">Simple Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example/js.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example/html.html">HTML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example/css.html">CSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example/yml.html">YAML</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="client.html" title="previous chapter">Client</a></li>
+      <li>Next: <a href="license.html" title="next chapter">License</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Alex Krantz.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="_sources/config.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
