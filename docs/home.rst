@@ -11,11 +11,15 @@ Parts
 * **Client** *- connect to the server*
     * communicates with the server
     * retrieves all the data
+* **Configuation** *- configure the server*
+    * set upstreams
+    * set debug credentials
+    * set global variables
 
 Basic Setup
 -----------
 #. Download the server
-#. Run the server with ``./server [options]``
+#. Run the server with ``./server [configfile.yml]``
 #. Download the client
 #. Implement into your game
 #. Try it out
