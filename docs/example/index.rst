@@ -6,23 +6,23 @@ Directory Structure
 -------------------
 ::
 
-    static/
+    public/
         main.css
         main.js
         mmoc.js
-    templates/
         index.html
-    app.py
+    config.yml
+    server
 
 View the Code
 -------------
-* :doc:`py`
 * :doc:`js`
 * :doc:`html`
 * :doc:`css`
+* :doc:`yml`
 
 Running the Server
 ------------------
-#. Make sure you have the required packages installed from ``requirements.txt``
-#. Run the command ``python3 app.py``
+#. Make sure you have the ``server`` downloaded from `here <https://github.com/akrantz01/mmos/releases/latest>`_
+#. Run the server with ``./server config.yml``
 #. Navigate to `localhost:5000 <http://localhost:5000>`_

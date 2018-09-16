@@ -4,11 +4,9 @@ The part of the application that allows for connection to the server
 
 Usage
 -----
-.. js:class:: mmmoc.MMOC(add_depends=false)
+.. js:class:: mmmoc.MMOC()
 
     The MMOC object is the basis for connecting to the server. It acts as the centerpoint for all multiplayer actions, such as sending data and getting data.
-
-    :param bool add_depends: Automatically write dependencies to the document, default to false
 
     .. js:method:: init(id_len=8, wsurl="//" + document.domain + ":" + location.port)
 
@@ -20,10 +18,6 @@ Usage
     .. js:method:: sendData()
 
         Send the player's coordinates, ID and other data to the server
-
-    .. js:method:: getDataFromServer()
-
-        Get every players' data from the server
 
     .. js:method:: getData()
 
@@ -51,17 +45,21 @@ Usage
         :param string key: key to store the data at
         :param any value: value to be stored
 
+    .. js:method:: isconnected()
+
+        Check if the client has connected to the server
+
+        :return: promise that will resolve to a boolean value
+        :rtype: Promise
+
 Example
 -------
 .. code-block:: javascript
 
-    let mp = new MMOC(true);
+    let mp = new MMOC();
     mp.init();
 
-    while true:
-        mp.sendData();
-        mp.getDataFromServer();
-
+    while (true):
         if(...) {
             mp.changeX(1);
         }
