@@ -113,6 +113,8 @@ func wsHandler(ctx echo.Context) error {
 			data.Users[msg.ID] = UserValue{
 				X: msg.Coordinates.X,
 				Y: msg.Coordinates.Y,
+				Z: msg.Coordinates.Z,
+				Orientation: msg.Orientation,
 				Other: msg.Other,
 			}
 			dataMutex.Unlock()

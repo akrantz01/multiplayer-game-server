@@ -4,6 +4,8 @@ let MMOC = (function() {
     let _id = "";
     let _x = 0;
     let _y = 0;
+    let _z = 0;
+    let _orientation = 0;
     let _other = {};
     let _data = {};
     let _connected = false;
@@ -41,8 +43,10 @@ let MMOC = (function() {
                 other: _other,
                 coordinates: {
                     x: _x,
-                    y: _y
+                    y: _y,
+                    z: _z
                 }
+                orientation: _orientation
             }));
         }
 
@@ -56,6 +60,14 @@ let MMOC = (function() {
 
         changeY(by=reqd("by")) {
             _y += by;
+        }
+
+        changeZ(by=reqd("by")) {
+            _z += by;
+        }
+
+        changeOrientation(by=reqd("by")) {
+            _orientation += by;
         }
 
         setOther(key=reqd("key"), value=reqd("value")) {

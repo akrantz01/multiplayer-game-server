@@ -42,6 +42,8 @@ type (
 	UserValue struct {
 		X		float32
 		Y	 	float32
+		Z		float32
+		Orientation	float32
 		Other	map[string]interface{}
 	}
 
@@ -51,18 +53,21 @@ type (
 		ID			string					`yaml:"id"`
 		Other		map[string]interface{}	`yaml:"other"`
 		Coordinates Coordinates				`yaml:"coordinates"`
+		Orientation	float32					`yaml:"orientation"`
 	}
 
 	// Store player coordinates (2d)
 	Coordinates struct {
 		X	float32	`yaml:"x"`
 		Y	float32 `yaml:"y"`
+		Z	float32	`yaml:"z"`
 	}
 )
 
 func (u UserValue) equals (u2 UserValue) bool {
 	if u.X != u2.X {return false}
 	if u.Y != u2.Y {return false}
+	if u.Z != u2.Z {return false}
 	if len(u.Other) != len(u2.Other) {return false}
 	return true
 }
