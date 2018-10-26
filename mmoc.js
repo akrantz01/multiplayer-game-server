@@ -31,12 +31,12 @@ let MMOC = (function() {
 
             setInterval(() => {
                 this.ws.send(JSON.stringify({
-                    type: 2
+                    type: 3
                 }));
             }, 15);
         }
 
-        sendData() {
+        sendPlayerData() {
             this.ws.send(JSON.stringify({
                 type: 1,
                 id: _id,
@@ -50,8 +50,36 @@ let MMOC = (function() {
             }));
         }
 
-        getData() {
-            return _data;
+        sendObjectData(object) {
+            this.ws.send(JSON.stringify({
+                type: 2,
+                id: object.id,
+                other: object.other,
+                coordinates: {
+                    x: object.x,
+                    y: object.y,
+                    z: object.z
+                }
+            }));
+        }
+
+        removeObject(object) {
+            this.ws.send(JSON.stringify({
+                type: 4,
+                id: object.id
+            }));
+        }
+
+        getPlayers() {
+            return _data["Users"];
+        }
+
+        getGlobals() {
+            return _data["Globals"];
+        }
+
+        getObjects() {
+            return _data["Objects"];
         }
 
         changeX(by=reqd("by")) {
@@ -87,3 +115,37 @@ let MMOC = (function() {
 
     return MMOC;
 })();
+
+class Object {
+    constructor(mesh, p, r) {
+        this.id = (function () {
+            function s4() {
+                return Math.floor((1 + Math.random()) * 0x1000).toString(16).substring(1);
+            }
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+        })();
+        this.mesh = mesh;
+
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+
+        this.other = {};
+
+        this.p = p;
+        this.r = r;
+    }
+
+    render() {
+        this.p();
+        this.r();
+    }
+
+    setOther(key, value) {
+        this.other[key] = value;
+    }
+
+    getOther(key) {
+        return this.other[key];
+    }
+}

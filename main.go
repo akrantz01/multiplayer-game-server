@@ -38,6 +38,7 @@ func main() {
 	dataMutex.Lock()
 	data.Globals = globals
 	data.Users = make(map[string]UserValue)
+	data.Objects = make(map[string]Object)
 	dataMutex.Unlock()
 
 	// Setup server
@@ -124,9 +125,23 @@ func wsHandler(ctx echo.Context) error {
 			break
 
 		case 2:
+			dataMutex.Lock()
+			data.Objects[msg.ID] = Object{
+				Coordinates: msg.Coordinates,
+				Other: msg.Other,
+			}
+			break
+
+		case 3:
 			dataMutex.RLock()
 			err = ws.WriteJSON(&data)
 			dataMutex.RUnlock()
+			break
+
+		case 4:
+			dataMutex.Lock()
+			delete(data.Objects, msg.ID)
+			dataMutex.Unlock()
 			break
 		}
 

@@ -30,6 +30,7 @@ type (
 		sync.Mutex
 		Globals		map[string]map[string]Value
 		Users		map[string]UserValue
+		Objects		map[string]Object
 	}
 
 	// Generic value
@@ -61,6 +62,12 @@ type (
 		X	float32	`yaml:"x"`
 		Y	float32 `yaml:"y"`
 		Z	float32	`yaml:"z"`
+	}
+
+	// Store objects
+	Object struct {
+		Coordinates Coordinates				`yaml:"coordinates"`
+		Other		map[string]interface{}	`yaml:"other"`
 	}
 )
 
