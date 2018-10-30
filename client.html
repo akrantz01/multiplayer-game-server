@@ -4,12 +4,20 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Client &#8212; MMOS v0.1.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'v0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -20,17 +28,15 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-  
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head><body>
+  </head>
+  <body>
   
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <div class="section" id="client">
@@ -39,12 +45,12 @@
 <div class="section" id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="mmmoc.MMOC">
-<em class="property">class </em><code class="descclassname">mmmoc.</code><code class="descname">MMOC</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmmoc.MMOC" title="Permalink to this definition">¶</a></dt>
+<dt id="mmoc.MMOC">
+<em class="property">class </em><code class="descclassname">mmoc.</code><code class="descname">MMOC</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MMOC" title="Permalink to this definition">¶</a></dt>
 <dd><p>The MMOC object is the basis for connecting to the server. It acts as the centerpoint for all multiplayer actions, such as sending data and getting data.</p>
 <dl class="method">
-<dt id="mmmoc.MMOC.init">
-<code class="descclassname">mmmoc.MMOC.</code><code class="descname">init</code><span class="sig-paren">(</span><em>id_len=8</em>, <em>wsurl=&quot;//&quot; + document.domain + &quot;:&quot; + location.port</em><span class="sig-paren">)</span><a class="headerlink" href="#mmmoc.MMOC.init" title="Permalink to this definition">¶</a></dt>
+<dt id="mmoc.MMOC.init">
+<code class="descclassname">mmoc.MMOC.</code><code class="descname">init</code><span class="sig-paren">(</span><em>id_len=8</em>, <em>wsurl=&quot;//&quot; + document.domain + &quot;:&quot; + location.port</em><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MMOC.init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the player’s ID and connection to the main server</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -61,15 +67,49 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="mmmoc.MMOC.sendData">
-<code class="descclassname">mmmoc.MMOC.</code><code class="descname">sendData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmmoc.MMOC.sendData" title="Permalink to this definition">¶</a></dt>
+<dt id="mmoc.MMOC.sendPlayerData">
+<code class="descclassname">mmoc.MMOC.</code><code class="descname">sendPlayerData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MMOC.sendPlayerData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send the player’s coordinates, ID and other data to the server</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="mmmoc.MMOC.getData">
-<code class="descclassname">mmmoc.MMOC.</code><code class="descname">getData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmmoc.MMOC.getData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get every players’ as an object</p>
+<dt id="mmoc.MMOC.sendObjectData">
+<code class="descclassname">mmoc.MMOC.</code><code class="descname">sendObjectData</code><span class="sig-paren">(</span><em>object</em><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MMOC.sendObjectData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a projectile’s or any moving object’s data that is not a player</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>object</strong> (<em>MovingObject</em>) – The object that is having its data being sent</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mmoc.MMOC.removeObject">
+<code class="descclassname">mmoc.MMOC.</code><code class="descname">removeObject</code><span class="sig-paren">(</span><em>object</em><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MMOC.removeObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an object from the server</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>object</strong> (<em>MovingObject</em>) – The object to be removed</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mmoc.MMOC.getPlayers">
+<code class="descclassname">mmoc.MMOC.</code><code class="descname">getPlayers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MMOC.getPlayers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get every player as an object</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -83,8 +123,40 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="mmmoc.MMOC.changeX">
-<code class="descclassname">mmmoc.MMOC.</code><code class="descname">changeX</code><span class="sig-paren">(</span><em>by</em><span class="sig-paren">)</span><a class="headerlink" href="#mmmoc.MMOC.changeX" title="Permalink to this definition">¶</a></dt>
+<dt id="mmoc.MMOC.getGlobals">
+<code class="descclassname">mmoc.MMOC.</code><code class="descname">getGlobals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MMOC.getGlobals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all of the server globals</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">all of the server’s global variables set in config.yml</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mmoc.MMOC.getObjects">
+<code class="descclassname">mmoc.MMOC.</code><code class="descname">getObjects</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MMOC.getObjects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all of the moving objects</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">all of the moving objects</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mmoc.MMOC.changeX">
+<code class="descclassname">mmoc.MMOC.</code><code class="descname">changeX</code><span class="sig-paren">(</span><em>by</em><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MMOC.changeX" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the player’s X value by a specified value</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -100,8 +172,8 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="mmmoc.MMOC.changeY">
-<code class="descclassname">mmmoc.MMOC.</code><code class="descname">changeY</code><span class="sig-paren">(</span><em>by</em><span class="sig-paren">)</span><a class="headerlink" href="#mmmoc.MMOC.changeY" title="Permalink to this definition">¶</a></dt>
+<dt id="mmoc.MMOC.changeY">
+<code class="descclassname">mmoc.MMOC.</code><code class="descname">changeY</code><span class="sig-paren">(</span><em>by</em><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MMOC.changeY" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the player’s Y value by a specified value</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -117,8 +189,42 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="mmmoc.MMOC.setOther">
-<code class="descclassname">mmmoc.MMOC.</code><code class="descname">setOther</code><span class="sig-paren">(</span><em>key</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#mmmoc.MMOC.setOther" title="Permalink to this definition">¶</a></dt>
+<dt id="mmoc.MMOC.changeZ">
+<code class="descclassname">mmoc.MMOC.</code><code class="descname">changeZ</code><span class="sig-paren">(</span><em>by</em><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MMOC.changeZ" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the player’s Z value by a specified value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>by</strong> (<em>number</em>) – value to change Z by</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mmoc.MMOC.changeOrientation">
+<code class="descclassname">mmoc.MMOC.</code><code class="descname">changeOrientation</code><span class="sig-paren">(</span><em>by</em><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MMOC.changeOrientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the player’s orientation by a specified value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>by</strong> (<em>nubmer</em>) – value to change the orientation by</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mmoc.MMOC.setOther">
+<code class="descclassname">mmoc.MMOC.</code><code class="descname">setOther</code><span class="sig-paren">(</span><em>key</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MMOC.setOther" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a piece of data to be broadcasted to every other player. The data will be located at the key <em>key</em></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -135,8 +241,8 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="mmmoc.MMOC.isconnected">
-<code class="descclassname">mmmoc.MMOC.</code><code class="descname">isconnected</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmmoc.MMOC.isconnected" title="Permalink to this definition">¶</a></dt>
+<dt id="mmoc.MMOC.isconnected">
+<code class="descclassname">mmoc.MMOC.</code><code class="descname">isconnected</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MMOC.isconnected" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the client has connected to the server</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -152,10 +258,78 @@
 
 </dd></dl>
 
+<br><br>
+
+<dl class="class">
+<dt id="mmoc.MovingObject">
+<em class="property">class </em><code class="descclassname">mmoc.</code><code class="descname">MovingObject</code><span class="sig-paren">(</span><em>mesh</em>, <em>p</em>, <em>r</em><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MovingObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>The MovingObject class is for creating new objects that need to be moved and synced between clients</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>object</strong> (<em>mesh</em>) – the mesh/data for the object</li>
+<li><strong>function</strong> (<em>r</em>) – a function for getting the position of the mesh. Must modify this.x, this.y, and this.z</li>
+<li><strong>function</strong> – a function for rendering the mesh</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="mmoc.MovingObject.render">
+<code class="descclassname">mmoc.MovingObject.</code><code class="descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MovingObject.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Render the mesh</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mmoc.MovingObject.setOther">
+<code class="descclassname">mmoc.MovingObject.</code><code class="descname">setOther</code><span class="sig-paren">(</span><em>key</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MovingObject.setOther" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a property for the object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>string</strong> (<em>key</em>) – the key for accessing the object</li>
+<li><strong>object</strong> (<em>value</em>) – a json serializable object</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mmoc.MovingObject.getOther">
+<code class="descclassname">mmoc.MovingObject.</code><code class="descname">getOther</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="headerlink" href="#mmoc.MovingObject.getOther" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a property at the key ‘key’</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>key</em>) – the key for accessing the value</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the value at the specified key</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="nx">mp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MMOC</span><span class="p">();</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="nx">mp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MMOC</span><span class="p">();</span>
 <span class="nx">mp</span><span class="p">.</span><span class="nx">init</span><span class="p">();</span>
 
 <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span><span class="o">:</span>
@@ -182,41 +356,18 @@
 
 
           </div>
-          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">MMOS</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="home.html">Welcome to MMOS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Client</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Client</a><ul>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="config.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="download.html">Download</a></li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="example/index.html">Simple Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="example/js.html">JavaScript</a></li>
-<li class="toctree-l1"><a class="reference internal" href="example/html.html">HTML</a></li>
-<li class="toctree-l1"><a class="reference internal" href="example/css.html">CSS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="example/yml.html">YAML</a></li>
-</ul>
-
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
@@ -226,16 +377,21 @@
   </ul></li>
 </ul>
 </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/client.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
-    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -246,8 +402,8 @@
       &copy;2018, Alex Krantz.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |
       <a href="_sources/client.rst.txt"
