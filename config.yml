@@ -1,4 +1,5 @@
 server:
+  mode: 0 # Modes: 0: normal  1: testing
   host: "127.0.0.1"
   port: "5000"
   debug-username: "debug"
@@ -18,3 +19,20 @@ globals:
     value2:
       value: "abc2"
       type: "string"
+
+test-players:
+  - starting:
+      x: 1
+      y: 2
+      z: 3
+    movement:
+      active: true
+      actions:
+        - from: -100
+          to: 100
+          axis: 0 # Axis definition: 0: X  1: Y  2: Z
+          speed: 1
+        - from: -50
+          to: 50
+          axis: 1
+          speed: 1

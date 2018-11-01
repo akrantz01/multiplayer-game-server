@@ -7,13 +7,18 @@ import (
 	"github.com/labstack/echo/middleware"
 	"net/http"
 	"net/url"
+	"os"
+	"os/signal"
 	"strings"
 	"sync"
+	"syscall"
+	"time"
 )
 
 var (
 	server Server
 	data GameData
+	tests []TestPlayer
 	dataMutex = sync.RWMutex{}
 	upgrader = websocket.Upgrader{
 		ReadBufferSize: 1024,
@@ -32,13 +37,16 @@ func main() {
 	// Temporary variable
 	var globals map[string]map[string]Value
 
+	dataMutex.Lock()
+	data.Users = make(map[string]*UserValue)
+	data.Objects = make(map[string]Object)
+	dataMutex.Unlock()
+
 	// Parse config file
-	server, globals = ParseConfig(*file)
+	server, globals, tests = ParseConfig(*file)
 
 	dataMutex.Lock()
 	data.Globals = globals
-	data.Users = make(map[string]UserValue)
-	data.Objects = make(map[string]Object)
 	dataMutex.Unlock()
 
 	// Setup server
@@ -57,6 +65,30 @@ func main() {
 	}
 	if !server.Upstream.OverrideRoot || !server.Upstream.InUse {
 		e.Static("/", "./public")
+	}
+	if server.Mode == 1 {
+		stop := make(chan struct{})
+		go func() {
+			for {
+				for i, tp := range tests {
+					tp.Move(i)
+				}
+				select {
+				case <-time.After(500*time.Millisecond):
+					break
+				case <-stop:
+					return
+				}
+			}
+		}()
+
+		c := make(chan os.Signal)
+		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+		go func() {
+			<-c
+			stop<-struct{}{}
+			os.Exit(0)
+		}()
 	}
 
 	// Define all routes
@@ -111,7 +143,7 @@ func wsHandler(ctx echo.Context) error {
 			userID = msg.ID
 
 			dataMutex.Lock()
-			data.Users[msg.ID] = UserValue{
+			data.Users[msg.ID] = &UserValue{
 				X: msg.Coordinates.X,
 				Y: msg.Coordinates.Y,
 				Z: msg.Coordinates.Z,
