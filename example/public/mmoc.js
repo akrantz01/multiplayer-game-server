@@ -4,6 +4,8 @@ let MMOC = (function() {
     let _id = "";
     let _x = 0;
     let _y = 0;
+    let _z = 0;
+    let _orientation = 0;
     let _other = {};
     let _data = {};
     let _connected = false;
@@ -29,25 +31,55 @@ let MMOC = (function() {
 
             setInterval(() => {
                 this.ws.send(JSON.stringify({
-                    type: 2
+                    type: 3
                 }));
             }, 15);
         }
 
-        sendData() {
+        sendPlayerData() {
             this.ws.send(JSON.stringify({
                 type: 1,
                 id: _id,
                 other: _other,
                 coordinates: {
                     x: _x,
-                    y: _y
+                    y: _y,
+                    z: _z
+                },
+                orientation: _orientation
+            }));
+        }
+
+        sendObjectData(object) {
+            this.ws.send(JSON.stringify({
+                type: 2,
+                id: object.id,
+                other: object.other,
+                coordinates: {
+                    x: object.x,
+                    y: object.y,
+                    z: object.z
                 }
             }));
         }
 
-        getData() {
-            return _data;
+        removeObject(object) {
+            this.ws.send(JSON.stringify({
+                type: 4,
+                id: object.id
+            }));
+        }
+
+        getPlayers() {
+            return _data["Users"];
+        }
+
+        getGlobals() {
+            return _data["Globals"];
+        }
+
+        getObjects() {
+            return _data["Objects"];
         }
 
         changeX(by=reqd("by")) {
@@ -56,6 +88,14 @@ let MMOC = (function() {
 
         changeY(by=reqd("by")) {
             _y += by;
+        }
+
+        changeZ(by=reqd("by")) {
+            _z += by;
+        }
+
+        changeOrientation(by=reqd("by")) {
+            _orientation += by;
         }
 
         setOther(key=reqd("key"), value=reqd("value")) {
@@ -75,3 +115,37 @@ let MMOC = (function() {
 
     return MMOC;
 })();
+
+class MovingObject {
+    constructor(mesh, p, r) {
+        this.id = (function () {
+            function s4() {
+                return Math.floor((1 + Math.random()) * 0x1000).toString(16).substring(1);
+            }
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+        })();
+        this.mesh = mesh;
+
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+
+        this.other = {};
+
+        this.p = p;
+        this.r = r;
+    }
+
+    render() {
+        this.p();
+        this.r();
+    }
+
+    setOther(key, value) {
+        this.other[key] = value;
+    }
+
+    getOther(key) {
+        return this.other[key];
+    }
+}

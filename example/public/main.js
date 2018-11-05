@@ -29,24 +29,24 @@ function setup() {
 function draw() {
     background(255);
     if (player) {
-        multiplayer.sendData();
-        if (keyIsDown(87)) {
+        multiplayer.sendPlayerData();
+        if (keyIsDown(87) || keyIsDown(38)) {
             multiplayer.changeY(-1);
         }
-        if (keyIsDown(83)) {
+        if (keyIsDown(83) || keyIsDown(40)) {
             multiplayer.changeY(1);
         }
-        if (keyIsDown(65)) {
+        if (keyIsDown(65) || keyIsDown(37)) {
             multiplayer.changeX(-1);
         }
-        if (keyIsDown(68)) {
+        if (keyIsDown(68) || keyIsDown(39)) {
             multiplayer.changeX(1);
         }
     }
 
-    let data = multiplayer.getData();
-    for (let key in data["Users"]) {
-        fill(data["Users"][key]["Other"]["color"]);
-        ellipse(data["Users"][key]["X"], data["Users"][key]["Y"], 20);
+    let players = multiplayer.getPlayers();
+    for (let player in players) {
+        fill(players[player]["Other"]["color"]);
+        ellipse(players[player]["X"], players[player]["Y"], 20);
     }
 }
