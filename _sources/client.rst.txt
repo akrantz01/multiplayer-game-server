@@ -4,7 +4,7 @@ The part of the application that allows for connection to the server
 
 Usage
 -----
-.. js:class:: mmoc.MMOC()
+.. js:class:: MMOC()
 
     The MMOC object is the basis for connecting to the server. It acts as the centerpoint for all multiplayer actions, such as sending data and getting data.
 
@@ -83,6 +83,15 @@ Usage
         :param string key: key to store the data at
         :param any value: value to be stored
 
+    .. js:method:: broadcast(id, x, y, z)
+
+        Broadcast a message with an id and position
+
+        :param string id: id of the object
+        :param number x: x coordinate of the object
+        :param number y: y coordinate of the object
+        :param number z: z coordinate of the object
+
     .. js:method:: isconnected()
 
         Check if the client has connected to the server
@@ -92,7 +101,7 @@ Usage
 
 
 
-.. js:class:: mmoc.MovingObject(mesh, p, r)
+.. js:class:: MovingObject(mesh, p, r)
 
     The MovingObject class is for creating new objects that need to be moved and synced between clients
 
