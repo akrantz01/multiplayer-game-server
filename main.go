@@ -27,6 +27,7 @@ var (
 			return true
 		},
 	}
+	connections map[string]*websocket.Conn
 )
 
 func main() {
@@ -130,11 +131,14 @@ func wsHandler(ctx echo.Context) error {
 		if err != nil {
 			if strings.Contains(err.Error(), "close 1001") {
 				delete(data.Users, userID)
+				delete(connections, userID)
 				break
 			} else {
 				panic(err)
 			}
 		}
+
+		connections[userID] = ws
 
 		//fmt.Printf("%+v", msg)
 
@@ -175,11 +179,15 @@ func wsHandler(ctx echo.Context) error {
 			delete(data.Objects, msg.ID)
 			dataMutex.Unlock()
 			break
+
+		case 5:
+			go broadcast(msg)
 		}
 
 		if err != nil {
 			if strings.Contains(err.Error(), "close 1001") {
 				delete(data.Users, userID)
+				delete(connections, userID)
 				break
 			} else {
 				panic(err)
@@ -226,4 +234,12 @@ func debugUserHandler(ctx echo.Context) error {
 	dataMutex.RUnlock()
 
 	return ctx.JSON(http.StatusOK, u)
+}
+
+func broadcast(msg Message) {
+	for _, ws := range connections {
+		if err := ws.WriteJSON(&msg); err != nil {
+			panic(err)
+		}
+	}
 }
