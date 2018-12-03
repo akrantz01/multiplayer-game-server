@@ -112,6 +112,10 @@ let MMOC = (function() {
             _z = z;
         }
 
+        getID() {
+            return _id;
+        }
+
         changeOrientation(by=reqd("by")) {
             _orientation += by;
         }
