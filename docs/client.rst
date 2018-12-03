@@ -70,6 +70,21 @@ Usage
 
         :param number by: value to change Z by
 
+    .. js:method:: setPosition(x, y, z)
+
+        Set entire position at once
+
+        :param number x: x coordinate
+        :param number y: y coordinate
+        :param nubmer z: z coordinate
+
+    .. js:method:: getID()
+
+        Get the player's ID
+
+        :return: player's ID
+        :rtype: string
+
     .. js:method:: changeOrientation(by)
 
         Change the player's orientation by a specified value
