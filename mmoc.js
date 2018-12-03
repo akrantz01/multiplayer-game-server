@@ -70,6 +70,18 @@ let MMOC = (function() {
             }));
         }
 
+        broadcast(id, x, y, z) {
+            this.ws.send(JSON.stringify({
+                type: 5,
+                id: i,
+                coordinates: {
+                    x: x,
+                    y: y,
+                    z: z
+                }
+            }))
+        }
+
         getPlayers() {
             return _data["Users"];
         }
@@ -116,7 +128,7 @@ let MMOC = (function() {
     return MMOC;
 })();
 
-class Object {
+class MovingObject {
     constructor(mesh, p, r) {
         this.id = (function () {
             function s4() {
