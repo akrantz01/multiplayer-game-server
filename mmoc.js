@@ -106,6 +106,12 @@ let MMOC = (function() {
             _z += by;
         }
 
+        setPosition(x=reqd('x'), y=reqd('y'), z=reqd('z')) {
+            _x = x;
+            _y = y;
+            _z = z;
+        }
+
         changeOrientation(by=reqd("by")) {
             _orientation += by;
         }
