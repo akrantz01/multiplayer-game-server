@@ -50,7 +50,7 @@ let MMOC = (function() {
             }));
         }
 
-        sendObjectData(object) {
+        sendObjectData(object=reqd('object')) {
             this.ws.send(JSON.stringify({
                 type: 2,
                 id: object.id,
@@ -63,14 +63,14 @@ let MMOC = (function() {
             }));
         }
 
-        removeObject(object) {
+        removeObject(object=reqd('object')) {
             this.ws.send(JSON.stringify({
                 type: 4,
                 id: object.id
             }));
         }
 
-        broadcast(id, x, y, z) {
+        broadcast(id=reqd('id'), x=reqd('x'), y=reqd('y'), z=reqd('z')) {
             this.ws.send(JSON.stringify({
                 type: 5,
                 id: i,
