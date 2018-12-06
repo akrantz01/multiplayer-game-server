@@ -1,0 +1,16 @@
+{
+  "name": "mmos",
+  "version": "1.0.0",
+  "description": "mmos in NodeJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "main": "node index.js"
+  },
+  "author": "Alex Krantz <alex@alexkrantz.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4",
+    "express-ws": "^4.0.0"
+  }
+}
