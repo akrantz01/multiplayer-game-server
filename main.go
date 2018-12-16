@@ -5,11 +5,11 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 	"time"
 )
@@ -22,13 +22,7 @@ var (
 		Globals: make(map[string]map[string]Value),
 	}
 	tests []TestPlayer
-	upgrader = websocket.Upgrader{
-		ReadBufferSize: 1024,
-		WriteBufferSize: 1024,
-		CheckOrigin: func(r *http.Request) bool {
-			return true
-		},
-	}
+	hub = newHub()
 	connections map[string]*websocket.Conn
 )
 
@@ -104,90 +98,25 @@ func main() {
 }
 
 func wsHandler(ctx echo.Context) error {
-	ws, err := upgrader.Upgrade(ctx.Response(), ctx.Request(), nil)
+	conn, err := upgrader.Upgrade(ctx.Response(), ctx.Request(), nil)
 	if err != nil {
-		return err
+		log.Println(err)
+		return nil
 	}
 
-	// Store user id for deletion of data
-	var userID string
-
-	// Close connection after end
-	defer ws.Close()
-
-	for {
-		var msg Message
-		err := ws.ReadJSON(&msg)
-		if err != nil {
-			if strings.Contains(err.Error(), "close 1001") {
-				data.DeleteUserData(userID)
-				delete(connections, userID)
-				break
-			} else {
-				panic(err)
-			}
-		}
-
-		connections[userID] = ws
-
-		switch msg.Type {
-		case 1:
-			userID = msg.ID
-
-			data.SetUserData(
-				msg.ID,
-				msg.Coordinates.X,
-				msg.Coordinates.Y,
-				msg.Coordinates.Z,
-				msg.Orientation,
-				msg.Other,
-			)
-			break
-
-		case 2:
-			data.SetObject(
-				msg.ID,
-				msg.Coordinates.X,
-				msg.Coordinates.Y,
-				msg.Coordinates.Z,
-				msg.Other,
-			)
-			break
-
-		case 3:
-			err = ws.WriteJSON(data.GetAllData())
-			break
-
-		case 4:
-			data.DeleteObject(msg.ID)
-			break
-
-		case 5:
-			go broadcast(msg)
-		}
-
-		if err != nil {
-			if strings.Contains(err.Error(), "close 1001") {
-				data.DeleteUserData(userID)
-				delete(connections, userID)
-				break
-			} else {
-				panic(err)
-			}
-		}
+	client := &Client{
+		hub: hub,
+		conn: conn,
+		send: make(chan []byte, 256),
 	}
+	client.hub.register <- client
+
+	go client.readPump()
+	go client.writePump()
 
 	return nil
 }
 
 func debugHandler(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, data.GetAllData())
-}
-
-func broadcast(msg Message) {
-	for _, ws := range connections {
-		if err := ws.WriteJSON(&msg); err != nil {
-			panic(err)
-		}
-	}
 }
