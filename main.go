@@ -10,16 +10,18 @@ import (
 	"os"
 	"os/signal"
 	"strings"
-	"sync"
 	"syscall"
 	"time"
 )
 
 var (
 	server Server
-	data GameData
+	data = GameData{
+		Users: make(map[string]*UserValue),
+		Objects: make(map[string]Object),
+		Globals: make(map[string]map[string]Value),
+	}
 	tests []TestPlayer
-	dataMutex = sync.RWMutex{}
 	upgrader = websocket.Upgrader{
 		ReadBufferSize: 1024,
 		WriteBufferSize: 1024,
@@ -38,17 +40,9 @@ func main() {
 	// Temporary variable
 	var globals map[string]map[string]Value
 
-	dataMutex.Lock()
-	data.Users = make(map[string]*UserValue)
-	data.Objects = make(map[string]Object)
-	dataMutex.Unlock()
-
 	// Parse config file
 	server, globals, tests = ParseConfig(*file)
-
-	dataMutex.Lock()
-	data.Globals = globals
-	dataMutex.Unlock()
+	data.SetGlobals(globals)
 
 	// Setup server
 	e := echo.New()
@@ -126,7 +120,7 @@ func wsHandler(ctx echo.Context) error {
 		err := ws.ReadJSON(&msg)
 		if err != nil {
 			if strings.Contains(err.Error(), "close 1001") {
-				delete(data.Users, userID)
+				data.DeleteUserData(userID)
 				delete(connections, userID)
 				break
 			} else {
@@ -136,44 +130,36 @@ func wsHandler(ctx echo.Context) error {
 
 		connections[userID] = ws
 
-		//fmt.Printf("%+v", msg)
-
 		switch msg.Type {
 		case 1:
 			userID = msg.ID
 
-			dataMutex.Lock()
-			data.Users[msg.ID] = &UserValue{
-				X: msg.Coordinates.X,
-				Y: msg.Coordinates.Y,
-				Z: msg.Coordinates.Z,
-				Orientation: msg.Orientation,
-				Other: msg.Other,
-			}
-			dataMutex.Unlock()
-
-			//fmt.Printf("%+v\n", data.Users)
-
+			data.SetUserData(
+				msg.ID,
+				msg.Coordinates.X,
+				msg.Coordinates.Y,
+				msg.Coordinates.Z,
+				msg.Orientation,
+				msg.Other,
+			)
 			break
 
 		case 2:
-			dataMutex.Lock()
-			data.Objects[msg.ID] = Object{
-				Coordinates: msg.Coordinates,
-				Other: msg.Other,
-			}
+			data.SetObject(
+				msg.ID,
+				msg.Coordinates.X,
+				msg.Coordinates.Y,
+				msg.Coordinates.Z,
+				msg.Other,
+			)
 			break
 
 		case 3:
-			dataMutex.RLock()
-			err = ws.WriteJSON(&data)
-			dataMutex.RUnlock()
+			err = ws.WriteJSON(data.GetAllData())
 			break
 
 		case 4:
-			dataMutex.Lock()
-			delete(data.Objects, msg.ID)
-			dataMutex.Unlock()
+			data.DeleteObject(msg.ID)
 			break
 
 		case 5:
@@ -182,7 +168,7 @@ func wsHandler(ctx echo.Context) error {
 
 		if err != nil {
 			if strings.Contains(err.Error(), "close 1001") {
-				delete(data.Users, userID)
+				data.DeleteUserData(userID)
 				delete(connections, userID)
 				break
 			} else {
@@ -195,11 +181,7 @@ func wsHandler(ctx echo.Context) error {
 }
 
 func debugHandler(ctx echo.Context) error {
-	dataMutex.RLock()
-	d := &data
-	dataMutex.RUnlock()
-
-	return ctx.JSON(http.StatusOK, d)
+	return ctx.JSON(http.StatusOK, data.GetAllData())
 }
 
 func broadcast(msg Message) {

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"strconv"
 	"sync"
 )
 
@@ -31,7 +30,7 @@ type (
 
 	// Game data
 	GameData struct {
-		sync.Mutex
+		sync.RWMutex
 		Globals		map[string]map[string]Value
 		Users		map[string]*UserValue
 		Objects		map[string]Object
@@ -96,6 +95,74 @@ type (
 	}
 )
 
+func (g *GameData) SetGlobals(globals map[string]map[string]Value) {
+	g.Lock()
+	defer g.Unlock()
+	g.Globals = globals
+}
+
+func (g *GameData) SetUserData(id string, x, y, z, orientation float32, other map[string]interface{}) {
+	g.Lock()
+	defer g.Unlock()
+	g.Users[id] = &UserValue{
+		X: x,
+		Y: y,
+		Z: z,
+		Orientation: orientation,
+		Other: other,
+	}
+}
+
+func (g *GameData) SetObject(id string, x, y, z float32, other map[string]interface{}) {
+	g.Lock()
+	defer g.Unlock()
+	g.Objects[id] = Object{
+		Coordinates: Coordinates{
+			X: x,
+			Y: y,
+			Z: z,
+		},
+		Other: other,
+	}
+}
+
+func (g *GameData) CreateTestUser(id string, x, y, z float32) *UserValue {
+	g.Lock()
+	defer g.Unlock()
+	g.Users[id] = &UserValue{
+		X: x,
+		Y: y,
+		Z: z,
+		Orientation: 0,
+		Other: make(map[string]interface{}),
+	}
+	return g.Users[id]
+}
+
+func (g *GameData) DeleteUserData(id string) {
+	g.Lock()
+	defer g.Unlock()
+	delete(g.Users, id)
+}
+
+func (g *GameData) DeleteObject(id string) {
+	g.Lock()
+	defer g.Unlock()
+	delete(g.Objects, id)
+}
+
+func (g *GameData) GetAllData() interface{} {
+	return struct {
+		Globals		map[string]map[string]Value
+		Users		map[string]*UserValue
+		Objects		map[string]Object
+	}{
+		Globals: g.Globals,
+		Users: g.Users,
+		Objects: g.Objects,
+	}
+}
+
 func (u UserValue) equals (u2 UserValue) bool {
 	if u.X != u2.X {return false}
 	if u.Y != u2.Y {return false}
@@ -109,7 +176,6 @@ func (t *TestPlayer) Move (id int) {
 		switch a.Axis {
 		case 0:
 			t.Reference.X += a.Speed
-			data.Users[strconv.Itoa(id)].X += a.Speed
 			break
 		case 1:
 			t.Reference.Y += a.Speed
