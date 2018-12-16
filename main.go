@@ -103,11 +103,7 @@ func main() {
 		}
 		return false, nil
 	}))
-	debug.GET("/all", debugAllHandler)
-	debug.GET("/globals/", debugGlobalHander)
-	debug.GET("/globals/:key", debugGlobalHander)
-	debug.GET("/users/", debugUserHandler)
-	debug.GET("/users/:id", debugUserHandler)
+	debug.GET("/", debugHandler)
 
 	// Start server
 	e.Logger.Fatal(e.Start(server.Host + ":" + server.Port))
@@ -198,42 +194,12 @@ func wsHandler(ctx echo.Context) error {
 	return nil
 }
 
-func debugAllHandler(ctx echo.Context) error {
+func debugHandler(ctx echo.Context) error {
 	dataMutex.RLock()
 	d := &data
 	dataMutex.RUnlock()
 
 	return ctx.JSON(http.StatusOK, d)
-}
-
-func debugGlobalHander(ctx echo.Context) error {
-	key := ctx.Param("key")
-
-	var g interface{}
-	dataMutex.RLock()
-	if data.Globals[key] == nil || key == "" {
-		g = &data.Globals
-	} else {
-		g = data.Globals[key]
-	}
-	dataMutex.RUnlock()
-
-	return ctx.JSON(http.StatusOK, g)
-}
-
-func debugUserHandler(ctx echo.Context) error {
-	id := ctx.Param("id")
-
-	var u interface{}
-	dataMutex.RLock()
-	if data.Users[id].equals(UserValue{}) || id == "" {
-		u = &data.Users
-	} else {
-		u = data.Users[id]
-	}
-	dataMutex.RUnlock()
-
-	return ctx.JSON(http.StatusOK, u)
 }
 
 func broadcast(msg Message) {
