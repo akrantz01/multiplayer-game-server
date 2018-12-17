@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"github.com/gorilla/handlers"
@@ -65,7 +64,7 @@ func main() {
 	go func() {
 		log.Println("Started pushing data...")
 		for {
-			if out, err := json.Marshal(data.GetAllData()); err != nil {
+			if out, err := data.GetAllData(); err != nil {
 				fmt.Printf("JSON Encoding Error: %v", err)
 			} else {
 				hub.broadcast <- out
@@ -105,7 +104,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 
 type debugHandler struct {}
 func (_ debugHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if j, err := json.Marshal(data.GetAllData()); err != nil {
+	if j, err := data.GetAllData(); err != nil {
 		log.Printf("JSON Encoding Error: %v", err)
 	} else {
 		w.Header().Set("Content-Type", "application/json")

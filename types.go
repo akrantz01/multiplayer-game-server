@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"sync"
 )
 
@@ -137,8 +138,10 @@ func (g *GameData) DeleteObject(id string) {
 	delete(g.Objects, id)
 }
 
-func (g *GameData) GetAllData() interface{} {
-	return struct {
+func (g *GameData) GetAllData() ([]byte, error) {
+	g.Lock()
+	defer g.Unlock()
+	j, err := json.Marshal(struct {
 		Globals		map[string]map[string]Value
 		Users		map[string]*UserValue
 		Objects		map[string]Object
@@ -146,7 +149,11 @@ func (g *GameData) GetAllData() interface{} {
 		Globals: g.Globals,
 		Users: g.Users,
 		Objects: g.Objects,
+	})
+	if err != nil {
+		return nil, err
 	}
+	return j, nil
 }
 
 func (u UserValue) equals (u2 UserValue) bool {
