@@ -8,7 +8,9 @@ let MMOC = (function() {
     let _orientation = 0;
     let _other = {};
     let _data = {};
+    let _broadcasts = {};
     let _connected = false;
+
 
     class MMOC {
         init(id_len=8, wsurl="//" + document.domain + ":" + location.port + "/ws") {
@@ -26,14 +28,10 @@ let MMOC = (function() {
             };
 
             this.ws.onmessage = function (event) {
-                _data = JSON.parse(event.data);
+                let d = JSON.parse(event.data);
+                if (d.Type === 4) _broadcasts[d.ID] = d;
+                _data = d;
             };
-
-            setInterval(() => {
-                this.ws.send(JSON.stringify({
-                    type: 3
-                }));
-            }, 15);
         }
 
         sendPlayerData() {
@@ -65,21 +63,25 @@ let MMOC = (function() {
 
         removeObject(object=reqd('object')) {
             this.ws.send(JSON.stringify({
-                type: 4,
+                type: 3,
                 id: object.id
             }));
         }
 
         broadcast(id=reqd('id'), x=reqd('x'), y=reqd('y'), z=reqd('z')) {
             this.ws.send(JSON.stringify({
-                type: 5,
-                id: i,
+                type: 4,
+                id: id,
                 coordinates: {
                     x: x,
                     y: y,
                     z: z
                 }
             }))
+        }
+
+        getData() {
+            return _data;
         }
 
         getPlayers() {
@@ -92,6 +94,11 @@ let MMOC = (function() {
 
         getObjects() {
             return _data["Objects"];
+        }
+
+        getBroadcasts() {
+            setTimeout(() => {_broadcasts = {}}, 1);
+            return _broadcasts;
         }
 
         changeX(by=reqd("by")) {

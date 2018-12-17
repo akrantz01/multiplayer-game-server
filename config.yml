@@ -2,14 +2,8 @@ server:
   mode: 0 # Modes: 0: normal  1: testing
   host: "127.0.0.1"
   port: "5000"
-  debug-username: "debug"
-  debug-password: "debug"
-  upstream:
-    active: yes
-    override-root: yes
-    locations:
-      - url: "http://localhost:8080"
-        endpoint: "/"
+  debug: yes
+  static-directory: "public"
 
 globals:
   s:

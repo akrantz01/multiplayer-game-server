@@ -1,33 +1,27 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
-	"github.com/gorilla/websocket"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"fmt"
+	"github.com/gorilla/handlers"
+	"log"
 	"net/http"
-	"net/url"
 	"os"
 	"os/signal"
-	"strings"
-	"sync"
 	"syscall"
 	"time"
 )
 
 var (
 	server Server
-	data GameData
-	tests []TestPlayer
-	dataMutex = sync.RWMutex{}
-	upgrader = websocket.Upgrader{
-		ReadBufferSize: 1024,
-		WriteBufferSize: 1024,
-		CheckOrigin: func(r *http.Request) bool {
-			return true
-		},
+	data = GameData{
+		Users: make(map[string]*UserValue),
+		Objects: make(map[string]Object),
+		Globals: make(map[string]map[string]Value),
 	}
-	connections map[string]*websocket.Conn
+	tests []TestPlayer
+	hub = newHub()
 )
 
 func main() {
@@ -38,208 +32,83 @@ func main() {
 	// Temporary variable
 	var globals map[string]map[string]Value
 
-	dataMutex.Lock()
-	data.Users = make(map[string]*UserValue)
-	data.Objects = make(map[string]Object)
-	dataMutex.Unlock()
-
 	// Parse config file
 	server, globals, tests = ParseConfig(*file)
+	data.SetGlobals(globals)
 
-	dataMutex.Lock()
-	data.Globals = globals
-	dataMutex.Unlock()
+	// Serve from static directory
+	http.Handle("/", handlers.LoggingHandler(os.Stdout, http.FileServer(http.Dir(server.StaticDir))))
 
-	// Setup server
-	e := echo.New()
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
+	// Gracefully stop goroutines
+	c := make(chan os.Signal)
+	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
+	go func() {
+		log.Println("Listening for SIGINT, SIGTERM & SIGKILL...")
+		<-c
+		log.Println("Stopped goroutines")
+		os.Exit(0)
+	}()
 
-	if server.Upstream.InUse {
-		for _, loc := range server.Upstream.Locations {
-			u, _ := url.Parse(loc.URL)
-			targets := []*middleware.ProxyTarget{{URL: u,},}
-
-			g := e.Group(loc.Endpoint)
-			g.Use(middleware.Proxy(middleware.NewRandomBalancer(targets)))
-		}
-	}
-	if !server.Upstream.OverrideRoot || !server.Upstream.InUse {
-		e.Static("/", "./public")
-	}
+	// Enable test users
 	if server.Mode == 1 {
-		stop := make(chan struct{})
 		go func() {
+			log.Println("Started moving test users...")
 			for {
 				for i, tp := range tests {
 					tp.Move(i)
 				}
-				select {
-				case <-time.After(500*time.Millisecond):
-					break
-				case <-stop:
-					return
-				}
+				time.Sleep(500 * time.Millisecond)
 			}
-		}()
-
-		c := make(chan os.Signal)
-		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-		go func() {
-			<-c
-			stop<-struct{}{}
-			os.Exit(0)
 		}()
 	}
 
-	// Define all routes
-	e.GET("/ws", wsHandler)
+	go func() {
+		log.Println("Started pushing data...")
+		for {
+			if out, err := json.Marshal(data.GetAllData()); err != nil {
+				fmt.Printf("JSON Encoding Error: %v", err)
+			} else {
+				hub.broadcast <- out
+			}
+			time.Sleep(15 * time.Millisecond)
+		}
+	}()
+
+	// WebSocket route
+	http.HandleFunc("/ws", wsHandler)
 
 	// Debug routes
-	debug := e.Group("/debug")
-	debug.Use(middleware.BasicAuth(func(u, p string, ctx echo.Context) (bool, error) {
-		if u == server.DebugUser && p == server.DebugPass {
-			return true, nil
-		}
-		return false, nil
-	}))
-	debug.GET("/all", debugAllHandler)
-	debug.GET("/globals/", debugGlobalHander)
-	debug.GET("/globals/:key", debugGlobalHander)
-	debug.GET("/users/", debugUserHandler)
-	debug.GET("/users/:id", debugUserHandler)
+	if server.Debug { http.Handle("/debug", handlers.LoggingHandler(os.Stdout, debugHandler{})) }
 
 	// Start server
-	e.Logger.Fatal(e.Start(server.Host + ":" + server.Port))
+	go hub.run()
+	log.Fatal(http.ListenAndServe(server.Host + ":" + server.Port, nil))
 }
 
-func wsHandler(ctx echo.Context) error {
-	ws, err := upgrader.Upgrade(ctx.Response(), ctx.Request(), nil)
+func wsHandler(w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		return err
+		log.Println(err)
+		return
 	}
 
-	// Store user id for deletion of data
-	var userID string
-
-	// Close connection after end
-	defer ws.Close()
-
-	for {
-		var msg Message
-		err := ws.ReadJSON(&msg)
-		if err != nil {
-			if strings.Contains(err.Error(), "close 1001") {
-				delete(data.Users, userID)
-				delete(connections, userID)
-				break
-			} else {
-				panic(err)
-			}
-		}
-
-		connections[userID] = ws
-
-		//fmt.Printf("%+v", msg)
-
-		switch msg.Type {
-		case 1:
-			userID = msg.ID
-
-			dataMutex.Lock()
-			data.Users[msg.ID] = &UserValue{
-				X: msg.Coordinates.X,
-				Y: msg.Coordinates.Y,
-				Z: msg.Coordinates.Z,
-				Orientation: msg.Orientation,
-				Other: msg.Other,
-			}
-			dataMutex.Unlock()
-
-			//fmt.Printf("%+v\n", data.Users)
-
-			break
-
-		case 2:
-			dataMutex.Lock()
-			data.Objects[msg.ID] = Object{
-				Coordinates: msg.Coordinates,
-				Other: msg.Other,
-			}
-			break
-
-		case 3:
-			dataMutex.RLock()
-			err = ws.WriteJSON(&data)
-			dataMutex.RUnlock()
-			break
-
-		case 4:
-			dataMutex.Lock()
-			delete(data.Objects, msg.ID)
-			dataMutex.Unlock()
-			break
-
-		case 5:
-			go broadcast(msg)
-		}
-
-		if err != nil {
-			if strings.Contains(err.Error(), "close 1001") {
-				delete(data.Users, userID)
-				delete(connections, userID)
-				break
-			} else {
-				panic(err)
-			}
-		}
+	client := &Client{
+		hub: hub,
+		conn: conn,
+		send: make(chan []byte, 256),
 	}
+	client.hub.register <- client
 
-	return nil
+	go client.readPump()
+	go client.writePump()
 }
 
-func debugAllHandler(ctx echo.Context) error {
-	dataMutex.RLock()
-	d := &data
-	dataMutex.RUnlock()
-
-	return ctx.JSON(http.StatusOK, d)
-}
-
-func debugGlobalHander(ctx echo.Context) error {
-	key := ctx.Param("key")
-
-	var g interface{}
-	dataMutex.RLock()
-	if data.Globals[key] == nil || key == "" {
-		g = &data.Globals
+type debugHandler struct {}
+func (_ debugHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if j, err := json.Marshal(data.GetAllData()); err != nil {
+		log.Printf("JSON Encoding Error: %v", err)
 	} else {
-		g = data.Globals[key]
-	}
-	dataMutex.RUnlock()
-
-	return ctx.JSON(http.StatusOK, g)
-}
-
-func debugUserHandler(ctx echo.Context) error {
-	id := ctx.Param("id")
-
-	var u interface{}
-	dataMutex.RLock()
-	if data.Users[id].equals(UserValue{}) || id == "" {
-		u = &data.Users
-	} else {
-		u = data.Users[id]
-	}
-	dataMutex.RUnlock()
-
-	return ctx.JSON(http.StatusOK, u)
-}
-
-func broadcast(msg Message) {
-	for _, ws := range connections {
-		if err := ws.WriteJSON(&msg); err != nil {
-			panic(err)
-		}
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(j)
 	}
 }

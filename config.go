@@ -25,15 +25,12 @@ func ParseConfig(file string) (Server, map[string]map[string]Value, []TestPlayer
 	yaml.Unmarshal(content, &config)
 
 	for id, player := range config.TestPlayers {
-		data.Users[strconv.Itoa(id)] = &UserValue{
-			X: player.Starting.X,
-			Y: player.Starting.Y,
-			Z: player.Starting.Z,
-			Orientation: 0,
-			Other: make(map[string]interface{}),
-		}
-		p := data.Users[strconv.Itoa(id)]
-		config.TestPlayers[id].Reference = p
+		config.TestPlayers[id].Reference = data.CreateTestUser(
+			strconv.Itoa(id),
+			player.Starting.X,
+			player.Starting.Y,
+			player.Starting.Z,
+		)
 	}
 
 	return config.Server, config.Globals, config.TestPlayers
