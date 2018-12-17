@@ -3,12 +3,7 @@ server:
   host: "127.0.0.1"
   port: "5000"
   debug: yes
-  upstream:
-    active: yes
-    override-root: yes
-    locations:
-      - url: "http://localhost:8080"
-        endpoint: "/"
+  static-directory: "public"
 
 globals:
   s:

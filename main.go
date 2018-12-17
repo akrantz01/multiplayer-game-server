@@ -2,12 +2,10 @@ package main
 
 import (
 	"flag"
-	"github.com/gorilla/websocket"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 	"os/signal"
 	"syscall"
@@ -23,7 +21,6 @@ var (
 	}
 	tests []TestPlayer
 	hub = newHub()
-	connections map[string]*websocket.Conn
 )
 
 func main() {
@@ -43,18 +40,8 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	if server.Upstream.InUse {
-		for _, loc := range server.Upstream.Locations {
-			u, _ := url.Parse(loc.URL)
-			targets := []*middleware.ProxyTarget{{URL: u,},}
+	e.Static("/", server.StaticDir)
 
-			g := e.Group(loc.Endpoint)
-			g.Use(middleware.Proxy(middleware.NewRandomBalancer(targets)))
-		}
-	}
-	if !server.Upstream.OverrideRoot || !server.Upstream.InUse {
-		e.Static("/", "./public")
-	}
 	if server.Mode == 1 {
 		stop := make(chan struct{})
 		go func() {

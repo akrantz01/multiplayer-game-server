@@ -11,20 +11,7 @@ type (
 		Host      string   `yaml:"host"`
 		Port      string   `yaml:"port"`
 		Debug     bool	   `yaml:"debug"`
-		Upstream  upstream `yaml:"upstream"`
-	}
-
-	// upstream info
-	upstream struct {
-		InUse			bool    	`yaml:"active"`
-		OverrideRoot	bool		`yaml:"override-root"`
-		Locations		[]location	`yaml:"locations"`
-	}
-
-	// location info
-	location struct {
-		URL			string	`yaml:"url"`
-		Endpoint	string	`yaml:"endpoint"`
+		StaticDir string   `yaml:"static-directory"`
 	}
 
 	// Game data
