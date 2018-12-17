@@ -8,7 +8,9 @@ let MMOC = (function() {
     let _orientation = 0;
     let _other = {};
     let _data = {};
+    let _broadcasts = {};
     let _connected = false;
+
 
     class MMOC {
         init(id_len=8, wsurl="//" + document.domain + ":" + location.port + "/ws") {
@@ -26,7 +28,9 @@ let MMOC = (function() {
             };
 
             this.ws.onmessage = function (event) {
-                _data = JSON.parse(event.data);
+                let d = JSON.parse(event.data);
+                if (d.Type === 4) _broadcasts[d.ID] = d;
+                _data = d;
             };
         }
 
@@ -76,6 +80,10 @@ let MMOC = (function() {
             }))
         }
 
+        getData() {
+            return _data;
+        }
+
         getPlayers() {
             return _data["Users"];
         }
@@ -86,6 +94,11 @@ let MMOC = (function() {
 
         getObjects() {
             return _data["Objects"];
+        }
+
+        getBroadcasts() {
+            setTimeout(() => {_broadcasts = {}}, 1);
+            return _broadcasts;
         }
 
         changeX(by=reqd("by")) {
