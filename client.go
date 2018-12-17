@@ -93,14 +93,10 @@ func (c *Client) readPump() {
 			break
 
 		case 3:
-			err = c.conn.WriteJSON(data.GetAllData())
-			break
-
-		case 4:
 			data.DeleteObject(msg.ID)
 			break
 
-		case 5:
+		case 4:
 			if out, err := json.Marshal(msg); err != nil {
 				log.Printf("JSON Encode Error: %v", err)
 			} else {
@@ -147,6 +143,19 @@ func (c *Client) writePump() {
 			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return
 			}
+		}
+	}
+}
+
+func (c *Client) pushData() {
+	ticker := time.NewTicker(time.Millisecond * 15)
+	defer func() {
+		ticker.Stop()
+	}()
+
+	for range ticker.C {
+		if err := c.conn.WriteJSON(data.GetAllData()); err != nil {
+			log.Printf("JSON Encode Error: %v", err)
 		}
 	}
 }

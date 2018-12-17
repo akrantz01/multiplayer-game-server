@@ -28,12 +28,6 @@ let MMOC = (function() {
             this.ws.onmessage = function (event) {
                 _data = JSON.parse(event.data);
             };
-
-            setInterval(() => {
-                this.ws.send(JSON.stringify({
-                    type: 3
-                }));
-            }, 15);
         }
 
         sendPlayerData() {
@@ -65,15 +59,15 @@ let MMOC = (function() {
 
         removeObject(object=reqd('object')) {
             this.ws.send(JSON.stringify({
-                type: 4,
+                type: 3,
                 id: object.id
             }));
         }
 
         broadcast(id=reqd('id'), x=reqd('x'), y=reqd('y'), z=reqd('z')) {
             this.ws.send(JSON.stringify({
-                type: 5,
-                id: i,
+                type: 4,
+                id: id,
                 coordinates: {
                     x: x,
                     y: y,

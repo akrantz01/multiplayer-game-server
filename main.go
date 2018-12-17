@@ -113,6 +113,7 @@ func wsHandler(ctx echo.Context) error {
 
 	go client.readPump()
 	go client.writePump()
+	go client.pushData()
 
 	return nil
 }
