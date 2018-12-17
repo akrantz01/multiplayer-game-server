@@ -10,8 +10,7 @@ type (
 		Mode	  int	   `yaml:"mode"`
 		Host      string   `yaml:"host"`
 		Port      string   `yaml:"port"`
-		DebugUser string   `yaml:"debug-username"`
-		DebugPass string   `yaml:"debug-password"`
+		Debug     bool	   `yaml:"debug"`
 		Upstream  upstream `yaml:"upstream"`
 	}
 

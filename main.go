@@ -84,14 +84,7 @@ func main() {
 	e.GET("/ws", wsHandler)
 
 	// Debug routes
-	debug := e.Group("/debug")
-	debug.Use(middleware.BasicAuth(func(u, p string, ctx echo.Context) (bool, error) {
-		if u == server.DebugUser && p == server.DebugPass {
-			return true, nil
-		}
-		return false, nil
-	}))
-	debug.GET("/", debugHandler)
+	if server.Debug { e.GET("/debug*", debugHandler) }
 
 	// Start server
 	e.Logger.Fatal(e.Start(server.Host + ":" + server.Port))

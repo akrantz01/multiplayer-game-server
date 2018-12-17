@@ -2,8 +2,7 @@ server:
   mode: 0 # Modes: 0: normal  1: testing
   host: "127.0.0.1"
   port: "5000"
-  debug-username: "debug"
-  debug-password: "debug"
+  debug: yes
   upstream:
     active: yes
     override-root: yes
