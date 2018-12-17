@@ -1,5 +1,7 @@
 package main
 
+import "log"
+
 type Hub struct {
 	clients    map[*Client]bool
 	broadcast  chan []byte
@@ -17,6 +19,7 @@ func newHub() *Hub {
 }
 
 func (h *Hub) run() {
+	log.Println("Starting hub")
 	for {
 		select {
 		case client := <-h.register:

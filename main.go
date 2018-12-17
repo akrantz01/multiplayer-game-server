@@ -1,9 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"fmt"
+	"github.com/gorilla/handlers"
 	"log"
 	"net/http"
 	"os"
@@ -35,53 +36,60 @@ func main() {
 	server, globals, tests = ParseConfig(*file)
 	data.SetGlobals(globals)
 
-	// Setup server
-	e := echo.New()
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
+	// Serve from static directory
+	http.Handle("/", handlers.LoggingHandler(os.Stdout, http.FileServer(http.Dir(server.StaticDir))))
 
-	e.Static("/", server.StaticDir)
+	// Gracefully stop goroutines
+	c := make(chan os.Signal)
+	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
+	go func() {
+		log.Println("Listening for SIGINT, SIGTERM & SIGKILL...")
+		<-c
+		log.Println("Stopped goroutines")
+		os.Exit(0)
+	}()
 
+	// Enable test users
 	if server.Mode == 1 {
-		stop := make(chan struct{})
 		go func() {
+			log.Println("Started moving test users...")
 			for {
 				for i, tp := range tests {
 					tp.Move(i)
 				}
-				select {
-				case <-time.After(500*time.Millisecond):
-					break
-				case <-stop:
-					return
-				}
+				time.Sleep(500 * time.Millisecond)
 			}
-		}()
-
-		c := make(chan os.Signal)
-		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-		go func() {
-			<-c
-			stop<-struct{}{}
-			os.Exit(0)
 		}()
 	}
 
-	// Define all routes
-	e.GET("/ws", wsHandler)
+	go func() {
+		log.Println("Started pushing data...")
+		for {
+			if out, err := json.Marshal(data.GetAllData()); err != nil {
+				fmt.Printf("JSON Encoding Error: %v", err)
+			} else {
+				hub.broadcast <- out
+			}
+			time.Sleep(15 * time.Millisecond)
+		}
+	}()
+
+	// WebSocket route
+	http.HandleFunc("/ws", wsHandler)
 
 	// Debug routes
-	if server.Debug { e.GET("/debug*", debugHandler) }
+	if server.Debug { http.Handle("/debug", handlers.LoggingHandler(os.Stdout, debugHandler{})) }
 
 	// Start server
-	e.Logger.Fatal(e.Start(server.Host + ":" + server.Port))
+	go hub.run()
+	log.Fatal(http.ListenAndServe(server.Host + ":" + server.Port, nil))
 }
 
-func wsHandler(ctx echo.Context) error {
-	conn, err := upgrader.Upgrade(ctx.Response(), ctx.Request(), nil)
+func wsHandler(w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
-		return nil
+		return
 	}
 
 	client := &Client{
@@ -93,11 +101,14 @@ func wsHandler(ctx echo.Context) error {
 
 	go client.readPump()
 	go client.writePump()
-	go client.pushData()
-
-	return nil
 }
 
-func debugHandler(ctx echo.Context) error {
-	return ctx.JSON(http.StatusOK, data.GetAllData())
+type debugHandler struct {}
+func (_ debugHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if j, err := json.Marshal(data.GetAllData()); err != nil {
+		log.Printf("JSON Encoding Error: %v", err)
+	} else {
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(j)
+	}
 }

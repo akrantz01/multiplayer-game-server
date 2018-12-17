@@ -57,8 +57,6 @@ func (c *Client) readPump() {
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("Unexpected Close Error: %v\n", err)
-			} else {
-				log.Printf("Error: %v\n", err)
 			}
 			break
 		}
@@ -143,19 +141,6 @@ func (c *Client) writePump() {
 			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return
 			}
-		}
-	}
-}
-
-func (c *Client) pushData() {
-	ticker := time.NewTicker(time.Millisecond * 15)
-	defer func() {
-		ticker.Stop()
-	}()
-
-	for range ticker.C {
-		if err := c.conn.WriteJSON(data.GetAllData()); err != nil {
-			log.Printf("JSON Encode Error: %v", err)
 		}
 	}
 }
