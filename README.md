@@ -1,5 +1,5 @@
-# Massively Multiplayer Online Game Server
-A simple massively multiplayer online game server written in Golang 1.11 and designed for use in JavaScript ES6.
+# Multiplayer Game Server
+A simple multiplayer game server written in Golang 1.11 and designed for use in JavaScript ES6.
 
 ## Get the Server
 ### Option 1
